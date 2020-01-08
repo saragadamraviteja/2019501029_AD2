@@ -11,14 +11,16 @@ import edu.princeton.cs.algs4.StdOut;
  */
 
 public class Main {
-   static int count;
-   static Digraph obj;
-    public static void parseSynsets(String filename) {
+   int count;
+   Digraph obj;
+   
+   Hashtable<String, ArrayList<Integer>> h = new Hashtable<String, ArrayList<Integer>>();
+    public void parseSynsets(String filename) {
 
         String[] store =  readFile(filename);
         String[] store1;
         String[] store2;
-        Hashtable<String, ArrayList<Integer>> h = new Hashtable<String, ArrayList<Integer>>();
+        // Hashtable<String, ArrayList<Integer>> h = new Hashtable<String, ArrayList<Integer>>();
         store1 = new String[store.length];
         for (int i = 0; i < store.length; i++) {
             store1 = store[i].split(","); 
@@ -36,33 +38,9 @@ public class Main {
         System.out.println(h.get("bioscope"));
     }
 
-    public static void parseHypernyms(String filename) {
-        String[] store = readFile(filename);
-        String[] store1;
-        String[] store2;
-        Hashtable<Integer, ArrayList<Integer>> h1 = new Hashtable<Integer, ArrayList<Integer>>(); 
-        store1 = new String[store.length];
-        for (int i = 0; i < store.length; i++) {
-            if (!(store[i].contains(","))){
-                continue;
-            }
-            store1 = store[i].split(",",2); 
-            store2 = store1[1].split(",");
-                for (int j = 0; j < store2.length; j++) {
-                    if(h1.containsKey(Integer.parseInt(store1[0]))){
-                        h1.get(Integer.parseInt(store1[0])).add(Integer.parseInt(store2[j]));
-                        count++;
-                    } else{
-                        ArrayList<Integer> temp = new ArrayList<Integer>();
-                        temp.add(Integer.parseInt(store2[j]));
-                        h1.put(Integer.parseInt(store1[0]), temp);
-                        count++;
-                    }
-                        
-                }
-        }
-    System.out.println(h1.get(53));
-    obj = new Digraph(count);
+public void graph(String filename) {
+    obj = new Digraph(h.size());
+    System.out.println(h.size());
     parseHypernymsDup(filename);
     for (int v = 0; v < obj.V(); v++){
         for (int w : obj.adj(v)){
@@ -70,11 +48,9 @@ public class Main {
         }
 
     }
-
-
 }
 
-public static void parseHypernymsDup(String filename) {
+public void parseHypernymsDup(String filename) {
     String[] store = readFile(filename);
     String[] store1;
     String[] store2;
@@ -127,8 +103,10 @@ public static void parseHypernymsDup(String filename) {
         }
 
     public static void main(String[] args) {
-        parseSynsets("synsets50000-subgraph.txt");
-        parseHypernyms("hypernyms.txt");
-        
+        Main ref = new Main();
+        ref.parseSynsets("synsets.txt");
+        //parseHypernymsDup("hypernyms.txt");
+        ref.graph("hypernyms.txt");
     }
 }
+
