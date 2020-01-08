@@ -15,7 +15,7 @@ public class Main {
    static Digraph obj;
     public static void parseSynsets(String filename) {
 
-        String[] store = readFile(filename);
+        String[] store =  readFile(filename);
         String[] store1;
         String[] store2;
         Hashtable<String, ArrayList<Integer>> h = new Hashtable<String, ArrayList<Integer>>();
