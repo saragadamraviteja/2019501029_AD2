@@ -5,12 +5,13 @@ import java.io.File;
 import java.util.Hashtable;
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.StdOut;
+// import edu.princeton.cs.algs4.BreadthFirstPaths;
 
 /**
  * Main
  */
 
-public class Main {
+public class WordNet {
    int count;
    Digraph obj;
    
@@ -40,7 +41,7 @@ public class Main {
 
 public void graph(String filename) {
     obj = new Digraph(h.size());
-    System.out.println(h.size());
+    // System.out.println(h.size());
     parseHypernymsDup(filename);
     for (int v = 0; v < obj.V(); v++){
         for (int w : obj.adj(v)){
@@ -103,7 +104,7 @@ public void parseHypernymsDup(String filename) {
         }
 
     public static void main(String[] args) {
-        Main ref = new Main();
+        WordNet ref = new WordNet();
         ref.parseSynsets("synsets.txt");
         //parseHypernymsDup("hypernyms.txt");
         ref.graph("hypernyms.txt");
