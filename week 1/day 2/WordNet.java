@@ -41,11 +41,11 @@ public class WordNet {
 
 public void graph(String filename) {
     obj = new Digraph(h.size());
-    // System.out.println(h.size());
+    //System.out.println(h.size());
     parseHypernymsDup(filename);
     for (int v = 0; v < obj.V(); v++){
         for (int w : obj.adj(v)){
-            StdOut.println(v + "->" + w);
+             StdOut.println(v + "->" + w);
         }
 
     }
@@ -77,7 +77,7 @@ public void parseHypernymsDup(String filename) {
             }
     }
     
-// System.out.println(h1.get(53));
+System.out.println(h1.get(34));
 }
     public static String[] readFile(final String filename) {
         /**

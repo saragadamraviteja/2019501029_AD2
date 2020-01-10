@@ -10,7 +10,7 @@ import java.util.Hashtable;
  * Main
  */
 
-public class Main {
+public class WordNet {
    static int count;
    //static Digraph obj;
     public static void parseSynsets(String filename) {
@@ -61,6 +61,7 @@ public class Main {
                         
                 }
         }
+        System.out.println(count);
     System.out.println(h1.get(53));
     // obj = new Digraph(count);
     // parseHypernymsDup(filename);
@@ -99,7 +100,7 @@ public class Main {
         }
 
     public static void main(String[] args) {
-        parseSynsets("synsets50000-subgraph.txt");
+        parseSynsets("synset.txt");
         parseHypernyms("hypernyms.txt");
         
     }
