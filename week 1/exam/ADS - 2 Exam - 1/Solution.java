@@ -41,6 +41,7 @@ public class Solution {
    //System.out.println(h.size());
         count = h.size();
         obj = new Digraph(count);
+        //System.out.println(h.get(7630));
     }
 
     private void emailLog(String filename) {
@@ -71,7 +72,7 @@ public class Solution {
         // int i = 0;
         for (int i = 0; i < 10; i++) {
             //System.out.println(asdasda.get(i));
-            System.out.println(asdasda.get(i) + " " +h.get(asdasda.get(i)));
+            System.out.println(asdasda.get(i) + " " +h.get(h5.get(asdasda.get(i))));
         }
      }
 
