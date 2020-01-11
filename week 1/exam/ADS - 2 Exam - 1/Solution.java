@@ -72,7 +72,7 @@ public class Solution {
         // int i = 0;
         for (int i = 0; i < 10; i++) {
             //System.out.println(asdasda.get(i));
-            System.out.println(asdasda.get(i) + " " +h.get(h5.get(asdasda.get(i))));
+            System.out.println(h.get(h5.get(asdasda.get(i)))+ "," + "" + asdasda.get(i));
         }
      }
 
