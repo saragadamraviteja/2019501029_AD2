@@ -7,25 +7,28 @@ import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.BreadthFirstPaths;
 import edu.princeton.cs.algs4.In;
+import java.io.FileNotFoundException;
+import java.lang.IllegalArgumentException;
+
 
 /**
  * Main
  */
 
 public class WordNet {
-   int count;
-   Digraph obj;
-    Sap sp;
+   private int count;
+   private Digraph obj;
+    private SAP sp;
 //    Digraph obj1;
 //    Digraph obj2;
    
-   Hashtable<String, ArrayList<Integer>> h = new Hashtable<String, ArrayList<Integer>>();
-  ArrayList<String> str = new ArrayList<String>();
-   public void parseSynsets(String filename) {
+   private Hashtable<String, ArrayList<Integer>> h = new Hashtable<String, ArrayList<Integer>>();
+  private ArrayList<String> str = new ArrayList<String>();
+   private void parseSynsets(String filename) {
 
-        String[] store =  readFile(filename);
-        String[] store1;
-        String[] store2;
+         String[] store =  readFile(filename);
+         String[] store1;
+         String[] store2;
         // Hashtable<String, ArrayList<Integer>> h = new Hashtable<String, ArrayList<Integer>>();
         store1 = new String[store.length];
         for (int i = 0; i < store.length; i++) {
@@ -48,27 +51,68 @@ public class WordNet {
         // System.out.println(h.get("bioscope"));
     }
 
-public void graph(String filename) {
-    
-    obj = new Digraph(h.size());
-    // System.out.println(h.size());
-    parseHypernymsDup(filename);
-    for (int v = 0; v < obj.V(); v++){
-        for (int w : obj.adj(v)){
-            // StdOut.println(v + "->" + w
-        }
+    public WordNet(String synsets, String hypernyms) {
+        parseSynsets(synsets);
+        // graph("hypernyms.txt"); 
+        //parseHypernyms(hypernyms);
+        obj = new Digraph(h.size());
+        parseHypernyms(hypernyms);
+        sp = new SAP(obj);
 
     }
+
+     // distance between nounA and nounB (defined below)
+   public int distance(String nounA, String nounB){
+    if (nounA == null || nounB == null) { 
+        throw new IllegalArgumentException();
+    } 
+       if (isNoun(nounA) && isNoun(nounB)) {
+           if (nounA == nounB) {
+               return 0;
+           }
+       int ds = sp.length(h.get(nounA), h.get(nounB));
+       return ds;
+   } else {
+       return -1;
+   }
 }
+
+   public Iterable<String> nouns() {
+        ArrayList<String> temp = new ArrayList<>();
+        for (String s : h.keySet()) {
+         temp.add(s);
+        }
+        return temp;
+   }
+
+
+// public void graph(String filename) {
+    
+//     // obj = new Digraph(h.size());
+//     // System.out.println(h.size());
+//     parseHypernyms(filename);
+//     sp = new Sap(obj);
+
+
+//     // for (int v = 0; v < obj.V(); v++){
+//     //     for (int w : obj.adj(v)){
+//     //         // StdOut.println(v + "->" + w
+//     //     }
+
+//     // }
+// }
 
 // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
    // in a shortest ancestral path (defined below)
    public String sap(String nounA, String nounB) {
     //sp = new Sap(obj);
+    if (nounA == null || nounB == null) { 
+        throw new IllegalArgumentException();
+    } 
         if (isNoun(nounA) && isNoun(nounB)) {
-            sp = new Sap(obj);
-            System.out.println(h.get(nounA).toString());
-            System.out.println(h.get(nounB).toString());
+            //  sp = new Sap(obj);
+           // System.out.println(h.get(nounA).toString());
+           // System.out.println(h.get(nounB).toString());
             int ans = sp.ancestor(h.get(nounA), h.get(nounB));
             if (ans != -1) {
                 return str.get(ans);
@@ -82,7 +126,7 @@ public void graph(String filename) {
         }
    }
 
-public void parseHypernymsDup(String filename) {
+private void parseHypernyms(String filename) {
     String[] store = readFile(filename);
     String[] store1;
     String[] store2;
@@ -111,12 +155,12 @@ public void parseHypernymsDup(String filename) {
 
 public boolean isNoun(String word) {
     if (word == null) {
-        return false;
+        throw new IllegalArgumentException();
     } else {
         return h.containsKey(word);
     }
 }
-    public static String[] readFile(final String filename) {
+    private static String[] readFile(final String filename) {
         /**
          * Taking input parameter as filename and performing
          * operations. It returns null when the file is cannot be read.
@@ -130,7 +174,7 @@ public boolean isNoun(String word) {
                 }
                 String[] linesArray = lines.toArray(new String[lines.size()]);
                 return linesArray;
-            } catch (Exception ex) {
+            } catch (FileNotFoundException ex) {
                 System.out.println(ex.getMessage());
             } finally {
                 if (scan != null) {
@@ -141,12 +185,13 @@ public boolean isNoun(String word) {
         }
 
     public static void main(String[] args) {
-       // In xx = new In(args[0]);
-       WordNet ref = new WordNet();
-        ref.parseSynsets("synsets.txt");
+        // In xx = new In(args[0]);
+       WordNet ref = new WordNet(args[0], args[1]);
+    //    System.out.println(args[1]);
+        //ref.parseSynsets("synsets.txt");
         //parseHypernymsDup("hypernyms.txt");
-        ref.graph("hypernyms.txt");  
-        System.out.println(ref.sap("calcium_ion", "casein"));  
+        //ref.graph("hypernyms.txt");  
+        //System.out.println(ref.distance("calcium_ion", "casein"));  
     }
 }
 
