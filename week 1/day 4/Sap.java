@@ -34,20 +34,20 @@ public class SAP {
             pathlength = 0;
             return v;
         }
+        ancestorValue = -1;
+        pathlength = -1;
         distance = Integer.MAX_VALUE;
         if ((v < 0 && v > Dg.V())||(w < 0 && w > Dg.V())) {
             return -1;
         }
         try {
-        bfs = new BreadthFirstDirectedPaths(Dg, v);
-        bfs1 = new BreadthFirstDirectedPaths(Dg, w);
+            bfs = new BreadthFirstDirectedPaths(Dg, v);
+            bfs1 = new BreadthFirstDirectedPaths(Dg, w);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
             return -1;
         }
-        // if (Dg.V() < v || v < 0) {
-         //   throw new IllegalArgumentException("vertex " + v + " is not between 0 and " + (v-1));
-        // }
+        
         for (int i = 0; i < Dg.V(); i++) {
             if(bfs.hasPathTo(i) && bfs1.hasPathTo(i)){
                 pathlength = bfs.distTo(i) + bfs1.distTo(i);    
@@ -61,13 +61,13 @@ public class SAP {
 
         if (distance != Integer.MAX_VALUE) {
             pathlength = distance;
-        }
-            return ancestorValue;
-        }
+        }return ancestorValue;
+    }
+
+
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
-            ancestor(v, w);
-           
-            return pathlength;
+        ancestor(v, w);
+        return pathlength;
     }
 
     public int ancestor(Iterable<Integer> v, Iterable<Integer> w){
@@ -76,32 +76,32 @@ public class SAP {
             if(v == null || w == null) throw new IllegalArgumentException(); 
         } catch (IllegalArgumentException e){
         }
- //int asec = -1;
- bfs = new BreadthFirstDirectedPaths(Dg, v);
- bfs1 = new BreadthFirstDirectedPaths(Dg, w);
+        ancestorValue = -1;
+        pathlength = -1;
+        bfs = new BreadthFirstDirectedPaths(Dg, v);
+        bfs1 = new BreadthFirstDirectedPaths(Dg, w);
         for (int k : v ) {
             for (int l : w) {
                 if (((k < 0 && k < Dg.V()) || k > 0 && k > Dg.V() )){
                     return -1;
                 }
-        for (int i = 0; i < Dg.V(); i++) {
-            //System.out.println(i);
-            if(bfs.hasPathTo(i) && bfs1.hasPathTo(i)){
-                pathlength = bfs.distTo(i) + bfs1.distTo(i);
-                    if (distance >= pathlength) {
-                        distance = pathlength;
-                        ancestorValue = i;
+                for (int i = 0; i < Dg.V(); i++) {
+                    //System.out.println(i);
+                    if(bfs.hasPathTo(i) && bfs1.hasPathTo(i)){
+                        pathlength = bfs.distTo(i) + bfs1.distTo(i);
+                        if (distance >= pathlength) {
+                            distance = pathlength;
+                            ancestorValue = i;
+                        }
                     }
-                }
-                if (distance != Integer.MAX_VALUE) {
-                    pathlength = distance;
                 }
             }
         }
-        // return ancestorValue;
+        if (distance != Integer.MAX_VALUE) {
+            pathlength = distance;
+        }
+        return ancestorValue;
     }
-    return ancestorValue;
-}
     // }
 public static void main(String[] args) {
     In in = new In(args[0]);
@@ -113,6 +113,8 @@ public static void main(String[] args) {
         int length   = sp.length(v, w);
         int ancestor = sp.ancestor(v, w);
         // StdOut.printf("length = %d, ancestor = %d\n", length, ancestor);
+        // ancestor = -1;
+        // sp.pathlength = -1;
         }
     }
 }
