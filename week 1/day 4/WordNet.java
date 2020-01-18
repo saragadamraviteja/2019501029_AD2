@@ -175,7 +175,7 @@ public boolean isNoun(String word) {
                 String[] linesArray = lines.toArray(new String[lines.size()]);
                 return linesArray;
             } catch (FileNotFoundException ex) {
-                System.out.println(ex.getMessage());
+                 System.out.println(ex.getMessage());
             } finally {
                 if (scan != null) {
                     scan.close();

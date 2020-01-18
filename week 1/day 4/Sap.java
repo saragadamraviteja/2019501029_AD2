@@ -35,7 +35,7 @@ public class SAP {
             return v;
         }
         ancestorValue = -1;
-        pathlength = -1;
+        pathlength yg= -1;
         distance = Integer.MAX_VALUE;
         if ((v < 0 && v > Dg.V())||(w < 0 && w > Dg.V())) {
             return -1;
