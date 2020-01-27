@@ -2,13 +2,7 @@ import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
-import java.util.*;
-
-import javax.sound.midi.SysexMessage;
-
-//import java.lang.*;
-import java.awt.Color;
-
+// import java.util.*;
 /**
  * SeamCarver
  */
@@ -16,11 +10,14 @@ public class SeamCarver {
 
     private Picture pic;
     public SeamCarver(Picture picture) {
-        pic = picture;
+        if (picture == null) {
+            throw new IllegalArgumentException();
+        }
+        pic = new Picture(picture);
     }
 
     public Picture picture() {
-        return pic;
+        return new Picture(pic);
     }
 
     public int width() {
@@ -65,6 +62,14 @@ public class SeamCarver {
     private double[][] arr;
 
     public int[] findVerticalSeam() {
+        if (this.height() == 1 && this.width() == 1) {
+            int[] tempy = new int[]{0};
+            return tempy;
+        }
+        if (this.width() == 1) {
+            int[] temp2 = new int[this.height()];
+            return temp2;
+        }
     arr = new double [pic.height()][pic.width()];
         for (int i = 0; i < pic.height(); i++) {
             for (int j = 0; j < pic.width(); j++) {
@@ -183,39 +188,67 @@ public class SeamCarver {
                     }
                 }
             }
-            if(colm[1] == 1){
-                colm[0] = 1;
+            if (colm.length == 1){
+                return colm;
+            }
+            if(colm[1] == 0){
+                colm[0] = 0;
             }else{
                 colm[0] = colm[1]-1;
             }
             return colm;
         }
-    private double[][] arrNew;
+    
 
     private void matrixTranspose() {
-            for (int i = 0; i < pic.width(); i++) {
-                for (int j = 0; j < pic.height(); j++) {
-                    arrNew[i][j] = arr[j][i];
-                }
+        double[][] arrNew = new double[pic.width()][pic.height()]; 
+        for (int i = 0; i < pic.width(); i++) {
+            for (int j = 0; j < pic.height(); j++) {
+                arrNew[i][j] = arr[j][i];
             }
-            arr = arrNew;
-            // System.out.println(Arrays.toString(modify()));
+        }
+        arr = arrNew;
+        // System.out.println(Arrays.toString(modify()));
         // for (int l = 0; l < arrNew.length; l++) {
         //     System.out.println(Arrays.toString(arrNew[l]));
         // }
     }
-    private Picture newHorObj;
+
+
     public void removeHorizontalSeam(int[] seam) {
-        System.out.println(pic.height() +" "+ pic.width());
+        //System.out.println(pic.height() +" "+ pic.width());
+    Picture newHorObj;
+        if (seam == null) {
+            throw new IllegalArgumentException();
+        }
+        if (seam.length > pic.width()) {
+            throw new IllegalArgumentException();
+        }
+        if (seam.length != pic.width()) {
+            throw new IllegalArgumentException();
+        }
+
+        for (int i = 0; i < seam.length - 1; i++) {
+            if (seam[i] >= pic.height() || seam[i] < 0) {
+                throw new IllegalArgumentException();
+            }
+            int dif = Math.abs(seam[i] - seam[i + 1]);
+            if (dif > 1) {
+                throw new IllegalArgumentException();
+            }
+        }
+        if (seam[seam.length -1] >= pic.height() || seam[seam.length - 1] < 0) {
+            throw new IllegalArgumentException();
+        }
         newHorObj = new Picture(pic.width(), pic.height() -1);
-        System.out.println(newHorObj.width());
-        System.out.println(newHorObj.height());
+        // System.out.println(newHorObj.width());
+        // System.out.println(newHorObj.height());
         for(int i = 0; i < pic.width(); i++){
             for(int j = 0; j < pic.height() - 1; j++) {
                 if(seam [i] == j) {
                     newHorObj.set(i, j, pic.get(i, j+1));
                     for(int k = j +1; k < pic.height() -1; k++) {
-                        System.out.println("k: " + k);
+                        //System.out.println("k: " + k);
                         pic.set(i, k, pic.get(i, k+1));
                     } 
                 } else {
@@ -223,11 +256,40 @@ public class SeamCarver {
                 }
             }
         }
-        System.out.println(newHorObj.toString());
+
+        this.pic = newHorObj;
+        //System.out.println(newHorObj.toString());
     }
 
-    private Picture newObj;
+    
+
     public void removeVerticalSeam(int[] seam) {
+    Picture newObj;
+        if (seam == null) {
+            throw new IllegalArgumentException();
+        }
+        if (seam.length > this.pic.height()) {
+            throw new IllegalArgumentException();
+        }
+        if (seam.length != this.pic.height()) {
+            throw new IllegalArgumentException();
+        }
+        // System.out.println(seam.length);
+
+        for (int i = 0; i < seam.length - 1; i++) {
+            // System.out.println(seam[i]);
+            if (seam[i] >= this.pic.width() || seam[i] < 0) {
+                // System.out.println(seam[i]);
+                throw new IllegalArgumentException();
+            }
+            int dif = Math.abs(seam[i] - seam[i + 1]);
+            if (dif > 1) {
+                throw new IllegalArgumentException();
+            }
+        }
+        if (seam[seam.length -1] >= pic.width() || seam[seam.length - 1] < 0) {
+            throw new IllegalArgumentException();
+        }
         newObj = new Picture(pic.width() -1, pic.height());
         for (int i = 0; i < pic.height(); i++) {
             for (int j = 0; j < pic.width() - 1; j++) {
@@ -242,12 +304,21 @@ public class SeamCarver {
                 }
             }
         }    
-        System.out.println(newObj.toString());
+        this.pic = newObj;
+        //System.out.println(newObj.toString());
     }
 
     public int[] findHorizontalSeam() {
+        if (this.height() == 1 && this.width() == 1) {
+            int[] tempy = new int[]{0};
+            return tempy;
+        }
+        if (this.height() == 1) {
+            int[] temp1 = new int[this.width()];
+            return temp1;
+        }
         arr = new double [pic.height()][pic.width()];
-        arrNew = new double[pic.width()][pic.height()]; 
+        // arrNew = new double[pic.width()][pic.height()]; 
         for (int i = 0; i < pic.height(); i++) {
             for (int j = 0; j < pic.width(); j++) {
                 arr[i][j] = energy(j, i);
@@ -255,12 +326,16 @@ public class SeamCarver {
         }
         matrixTranspose();
             //modify();
+            // arr = arrNew;
         return modify();
     }
 
         
 
-    private double energy(int x, int y){
+    public double energy(int x, int y){
+        if (x < 0 || x > this.width() - 1 || y < 0 || y > this.height() - 1) {
+            throw new IllegalArgumentException();
+        }
         if (x == 0 || y == 0 || x == width() -1 || y == height() - 1 ) {
             return 1000;
         }
@@ -288,8 +363,11 @@ public class SeamCarver {
         SeamCarver ref = new SeamCarver(obj);
         //ref.findVerticalSeam();
         //ref.findHorizontalSeam();
-        //ref.removeVerticalSeam(ref.findVerticalSeam());
-        ref.removeHorizontalSeam(ref.findHorizontalSeam());
+        int[] test = new int[]{ 2, 2, 1, 0, 0, 0, -1 };
+        //ref.removeVerticalSeam(test);
+        ref.removeVerticalSeam(test);
+        //ref.removeHorizontalSeam(ref.findHorizontalSeam());
+
 
     }
 }
