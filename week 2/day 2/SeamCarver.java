@@ -3,6 +3,9 @@ import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
 import java.util.*;
+
+import javax.sound.midi.SysexMessage;
+
 //import java.lang.*;
 import java.awt.Color;
 
@@ -11,7 +14,7 @@ import java.awt.Color;
  */
 public class SeamCarver {
 
-    Picture pic;
+    private Picture pic;
     public SeamCarver(Picture picture) {
         pic = picture;
     }
@@ -59,6 +62,204 @@ public class SeamCarver {
         return (RGBValue >> 0) & 0xFF;
     }
 
+    private double[][] arr;
+
+    public int[] findVerticalSeam() {
+    arr = new double [pic.height()][pic.width()];
+        for (int i = 0; i < pic.height(); i++) {
+            for (int j = 0; j < pic.width(); j++) {
+                    arr[i][j] = energy(j, i);
+            }
+        }
+        // for (int l = 0; l < arr.length; l++) {
+        //     System.out.println(Arrays.toString(arr[l]));
+        //     }
+    //System.out.println(Arrays.toString(modify()));
+    return modify();
+}
+
+    private int[] modify() {
+        for (int i = 1; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                if (i == 1) {
+                arr[i][j] = 1000 + arr[i][j];
+                }  else {
+                        if (j == 0) {
+                            if (arr[i - 1][j] < arr[i - 1][j + 1]) {
+                                    arr[i][j] += arr[i - 1][j]; 
+                            } else {
+                                arr[i][j] += arr[i - 1][j + 1];
+                            }
+                        } else if (j == arr[i].length - 1) {
+                            if (arr[i - 1][j] < arr[i - 1][j - 1]) {
+                                arr[i][j] += arr[i - 1][j];
+                            } else {
+                                arr[i][j] += arr[i - 1][j - 1];
+                            }
+                        } else {
+                            if (arr[i - 1][j - 1] < arr[i - 1][j]) {
+                                    if (arr[i - 1][j - 1] < arr[i - 1][j + 1]) {
+                                        arr[i][j] += arr[i - 1][j - 1]; 
+                                    } else {
+                                        arr[i][j] += arr[i - 1][j + 1];
+                                    }
+                            } else {
+                                if (arr[i - 1][j] < arr[i - 1][j + 1]) {
+                                        arr[i][j] += arr[i - 1][j];
+                                } else {
+                                    arr[i][j] += arr[i - 1][j + 1];
+                                }
+                            }
+                        }
+                }
+            }
+        }
+        // for (int l = 0; l < arr.length; l++) {
+        // System.out.println(Arrays.toString(arr[l]));
+        // }
+        double min = 0.0;
+        int k = 0;
+        int[] colm = new int[arr.length];
+        int temp = 0;
+        for (int i = 0; i < arr[0].length- 1; i++) {
+            if (arr[arr.length - 1][i] > arr[arr.length - 1][i + 1]) {
+                    min = arr[arr.length - 1][i + 1];
+                    temp = i + 1;
+                    //System.out.println(temp);
+                }
+        }
+        colm[arr.length - 1]= temp;
+        //System.out.println(colm[arr.length - 1]);
+        //System.out.println(min);
+        //System.out.println("temp" +temp);
+        //System.out.println(pic.height() - 2);
+        for (int i = arr.length - 1; i > 0; i--) {
+            //System.out.println(i);
+            //System.out.println("a" +" " + colm[arr.length - 1]);
+            if (temp == 0) {
+                if (arr[i - 1][temp] <arr[i - 1][temp + 1] ) {
+                        colm[i - 1] = temp; 
+                       // System.out.println("b" +" " + colm[arr.length - 1]);
+                } else {
+                    colm[i - 1] = temp + 1 ;
+                    temp += 1;
+                   // System.out.println("c" +" " + colm[arr.length - 1]);
+                }
+            } else if (temp == arr[i].length - 1) {
+                //System.out.println("d" +" " + colm[arr.length - 1]);
+                if (arr[i - 1][temp] < arr[i - 1][temp -1]) {
+                    //System.out.println("e" +" " + colm[arr.length - 1]);
+                    colm[i -1] = temp; 
+                } else {
+                    //System.out.println("f" +" " + colm[arr.length - 1]);
+                    colm[i - 1] = temp - 1;
+                    temp = temp - 1;
+                }
+            } else {
+              // System.out.println(temp + " "+ i+" "+ pic.width());
+               //System.out.println(arr[i - 1][temp + 1]+ "****");
+                if (arr[i - 1][temp - 1] < arr[i - 1][temp]) {
+                    //System.out.println("g" +" " + colm[arr.length - 1]);
+                    //System.out.println(arr[i - 1][temp + 1]);
+                    if (arr[i - 1][temp - 1] < arr[i - 1][temp + 1]) {
+                        //System.out.println("h" +" " + colm[arr.length - 1]);
+                       // System.out.println(arr[i - 1][temp+1]);
+                        colm[i - 1] = temp - 1;
+                        temp -= 1;
+                    } else {
+                            colm[i -1] = temp + 1;
+                            temp += 1;
+                            //System.out.println("i" +" " + colm[arr.length - 1]);
+                        }
+                    } else {
+                        if (arr[i - 1][temp] < arr[i - 1][temp + 1]) {
+                            //System.out.println("j" +" " + colm[arr.length - 1]);
+                            colm[i -1] = temp;
+                        } else {
+                            colm[i -1] = temp + 1;
+                            temp += 1;
+                            //System.out.println("k" +" " + colm[arr.length - 1]);
+                        }
+                    }
+                }
+            }
+            if(colm[1] == 1){
+                colm[0] = 1;
+            }else{
+                colm[0] = colm[1]-1;
+            }
+            return colm;
+        }
+    private double[][] arrNew;
+
+    private void matrixTranspose() {
+            for (int i = 0; i < pic.width(); i++) {
+                for (int j = 0; j < pic.height(); j++) {
+                    arrNew[i][j] = arr[j][i];
+                }
+            }
+            arr = arrNew;
+            // System.out.println(Arrays.toString(modify()));
+        // for (int l = 0; l < arrNew.length; l++) {
+        //     System.out.println(Arrays.toString(arrNew[l]));
+        // }
+    }
+    private Picture newHorObj;
+    public void removeHorizontalSeam(int[] seam) {
+        System.out.println(pic.height() +" "+ pic.width());
+        newHorObj = new Picture(pic.width(), pic.height() -1);
+        System.out.println(newHorObj.width());
+        System.out.println(newHorObj.height());
+        for(int i = 0; i < pic.width(); i++){
+            for(int j = 0; j < pic.height() - 1; j++) {
+                if(seam [i] == j) {
+                    newHorObj.set(i, j, pic.get(i, j+1));
+                    for(int k = j +1; k < pic.height() -1; k++) {
+                        System.out.println("k: " + k);
+                        pic.set(i, k, pic.get(i, k+1));
+                    } 
+                } else {
+                    newHorObj.set(i, j, pic.get(i, j));
+                }
+            }
+        }
+        System.out.println(newHorObj.toString());
+    }
+
+    private Picture newObj;
+    public void removeVerticalSeam(int[] seam) {
+        newObj = new Picture(pic.width() -1, pic.height());
+        for (int i = 0; i < pic.height(); i++) {
+            for (int j = 0; j < pic.width() - 1; j++) {
+                if (seam[i] == j) {
+                    newObj.set(j, i, pic.get(j+1, i));
+                    for(int k = j + 1; k < pic.width() - 1; k++) {
+                        pic.set(k, i,pic.get(k+1, i) );
+                    }
+                
+                } else {
+                    newObj.set(j, i, pic.get(j, i));
+                }
+            }
+        }    
+        System.out.println(newObj.toString());
+    }
+
+    public int[] findHorizontalSeam() {
+        arr = new double [pic.height()][pic.width()];
+        arrNew = new double[pic.width()][pic.height()]; 
+        for (int i = 0; i < pic.height(); i++) {
+            for (int j = 0; j < pic.width(); j++) {
+                arr[i][j] = energy(j, i);
+            }
+        }
+        matrixTranspose();
+            //modify();
+        return modify();
+    }
+
+        
+
     private double energy(int x, int y){
         if (x == 0 || y == 0 || x == width() -1 || y == height() - 1 ) {
             return 1000;
@@ -81,17 +282,14 @@ public class SeamCarver {
 
     }
 
-
+  
     public static void main(String[] args) {
         Picture obj = new Picture(args[0]);
         SeamCarver ref = new SeamCarver(obj);
-        // ref.pic.show();
-        // System.out.println(ref.height());
-        // System.out.println(ref.width());
-        for (int i = 0; i < ref.width(); i++) {
-                for (int j = 0; j < ref.height(); j++) {
-                        System.out.println(ref.energy(i, j));
-                }
-        }
+        //ref.findVerticalSeam();
+        //ref.findHorizontalSeam();
+        //ref.removeVerticalSeam(ref.findVerticalSeam());
+        ref.removeHorizontalSeam(ref.findHorizontalSeam());
+
     }
 }
