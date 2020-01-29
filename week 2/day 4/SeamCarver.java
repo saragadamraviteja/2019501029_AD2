@@ -214,55 +214,6 @@ public class SeamCarver {
         // }
     }
 
-
-    public void removeHorizontalSeam(int[] seam) {
-        //System.out.println(pic.height() +" "+ pic.width());
-    Picture newHorObj;
-        if (seam == null) {
-            throw new IllegalArgumentException();
-        }
-        if (seam.length > pic.width()) {
-            throw new IllegalArgumentException();
-        }
-        if (seam.length != pic.width()) {
-            throw new IllegalArgumentException();
-        }
-
-        for (int i = 0; i < seam.length - 1; i++) {
-            if (seam[i] >= pic.height() || seam[i] < 0) {
-                throw new IllegalArgumentException();
-            }
-            int dif = Math.abs(seam[i] - seam[i + 1]);
-            if (dif > 1) {
-                throw new IllegalArgumentException();
-            }
-        }
-        if (seam[seam.length -1] >= pic.height() || seam[seam.length - 1] < 0) {
-            throw new IllegalArgumentException();
-        }
-        newHorObj = new Picture(pic.width(), pic.height() -1);
-        // System.out.println(newHorObj.width());
-        // System.out.println(newHorObj.height());
-        for(int i = 0; i < pic.width(); i++){
-            for(int j = 0; j < pic.height() - 1; j++) {
-                if(seam [i] == j) {
-                    newHorObj.set(i, j, pic.get(i, j+1));
-                    for(int k = j +1; k < pic.height() -1; k++) {
-                        //System.out.println("k: " + k);
-                        pic.set(i, k, pic.get(i, k+1));
-                    } 
-                } else {
-                    newHorObj.set(i, j, pic.get(i, j));
-                }
-            }
-        }
-
-        this.pic = newHorObj;
-        //System.out.println(newHorObj.toString());
-    }
-
-    
-
     public void removeVerticalSeam(int[] seam) {
     Picture newObj;
         if (seam == null) {
