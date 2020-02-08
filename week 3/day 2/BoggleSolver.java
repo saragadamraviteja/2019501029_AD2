@@ -25,7 +25,7 @@ public class BoggleSolver {
 
     //  String[] validWords;
     private int count = 0;
-     private void testing(int k, int l, BoggleBoard board) {
+     private void testing(int k, int l, BoggleBoard board, Set<String> valid, boolean[][] bool) {
         count ++;
         if (k < 0 || l < 0|| k >= board.rows()|| l >= board.cols()) {
             return;
@@ -51,6 +51,7 @@ public class BoggleSolver {
 
             if (tt.hasPrefix(str.toString())== false) {
 
+
                 if (board.getLetter(k, l) == 'Q') {
                     
                     str.delete(str.length()-2, str.length());
@@ -66,7 +67,7 @@ public class BoggleSolver {
 
         for(int i =-1; i <2; i++ )  {
             for(int j = -1; j< 2; j++) {
-                    testing(k + i, l+j,board);
+                    testing(k + i, l+j,board, valid,bool);
             }
         }
         if (board.getLetter(k, l) == 'Q') {
@@ -82,17 +83,17 @@ public class BoggleSolver {
      }
 
     // Returns the set of all valid words in the given Boggle board, as an Iterable.
-    private Set<String> valid;
+    //private Set<String> valid;
     private StringBuffer str;
-    private boolean[][] bool;
+    //private boolean[][] bool;
     public Iterable<String> getAllValidWords(BoggleBoard board) {
-            valid = new HashSet<String>();
-            // Set<String> valid = new HashSet<String>();
-            bool = new boolean[board.rows()][board.cols()];
+            //valid = new HashSet<String>();
+            Set<String> valid = new HashSet<String>();
+            boolean[][] bool = new boolean[board.rows()][board.cols()];
             str = new StringBuffer();
             for (int k = 0; k < board.rows(); k++) {
                 for(int l = 0; l < board.cols(); l++) {
-                    testing(k,l,board);
+                    testing(k,l,board,valid,bool);
                 }
             }
         return valid;
