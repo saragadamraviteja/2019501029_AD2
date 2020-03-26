@@ -68,7 +68,7 @@ public class MoveToFront {
                         break;
                     }
                 }
-                characters = MoveToFront(characters, position, ch);
+                characters = MoveToFront(characters, position, characters[ch]);
             }
         BinaryStdIn.close();
         BinaryStdOut.close();

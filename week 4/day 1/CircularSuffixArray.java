@@ -15,7 +15,7 @@ public class CircularSuffixArray {
         
         int len = s.length();
 
-        Suffix[] suffixes = new Suffix[n];
+        Suffix[] suffixes = new Suffix[len];
 
         for (int j = 0; j < len; j++) {
             suffixes[j] = new Suffix(s.substring(j) + s.substring(0, j), j);
@@ -72,9 +72,6 @@ public class CircularSuffixArray {
         if (i < 0 || i >= index.length) throw new IllegalArgumentException();
         return index[i];
     }
-
-    
-    // unit testing (required)
     public static void main(String[] args) {
         
     }
