@@ -1,78 +1,87 @@
 import java.lang.IllegalArgumentException;
 import edu.princeton.cs.algs4.LSD;
 import java.util.Arrays;
-/**
- * CircularSuffixArray
- */
-public class CircularSuffixArray {
 
+
+
+public class CircularSuffixArray {
     private int[] index;
-    // circular suffix array of s
-    public CircularSuffixArray(String s) {
-        if (s == null) {
+
+    public CircularSuffixArray(String text) {
+        if (text == null) {
             throw new IllegalArgumentException();
         }
-        
-        int len = s.length();
 
-        Suffix[] suffixes = new Suffix[len];
+        int l = text.length();
 
-        for (int j = 0; j < len; j++) {
-            suffixes[j] = new Suffix(s.substring(j) + s.substring(0, j), j);
+        Suffix[] allSuffixes = new Suffix[l];
+        int i = 0;
+        while (i < l) {
+            allSuffixes[i] = new Suffix(text.substring(i) + text.substring(0, i), i);
+
+            i++;
         }
 
-        Arrays.sort(suffixes);
-
-        index = new int[len];
-        for (int i = 0; i < len; i++) {
-            index[i] = suffixes[i].index;
+        Arrays.sort(allSuffixes);
+        
+        index = new int[l];
+        
+        int j = 0;
+        while (j < l) {
+            index[j] = allSuffixes[j].index;
+            j++;
         }
     }
 
+    
     private static class Suffix implements Comparable<Suffix> {
-
         private final String text;
-
         private final int index;
-
         private Suffix(String text, int index) {
             this.text = text;
             this.index = index;
         }
-
         private int length() {
             return text.length();
         }
-
         private char charAt(int i) {
             return text.charAt(i);
         }
 
         public int compareTo(Suffix that) {
-            if (this == that) return 0;
+            if (this == that) return 0;  // optimization
+            
             int n = Math.min(this.length(), that.length());
-            for (int i = 0; i < n; i++) {
-                if (this.charAt(i) < that.charAt(i)) return -1;
-                if (this.charAt(i) > that.charAt(i)) return +1;
+            int i = 0;
+            while (i < n) {
+                if (this.charAt(i) < that.charAt(i)){
+                    return -1;
+                } 
+                
+                if (this.charAt(i) > that.charAt(i)) {
+                    return +1;
+                }
+
+                i++;
             }
+
             return this.length() - that.length();
         }
+
         public String toString() {
             return text.substring(index);
         }
     }
 
-    // length of s
     public int length() {
         return index.length;
     }
 
-    // returns index of ith sorted suffix
+
     public int index(int i) {
         if (i < 0 || i >= index.length) throw new IllegalArgumentException();
         return index[i];
     }
-    public static void main(String[] args) {
-        
-    }
 }
+
+
